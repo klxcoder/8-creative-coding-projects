@@ -3,7 +3,6 @@ const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-ctx.fillStyle = 'white';
 
 class Particle {
   constructor(effect) {
@@ -15,7 +14,9 @@ class Particle {
   draw(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+    context.fillStyle = `hsl(${this.x * 0.5}, 100%, 50%)`;
     context.fill();
+    context.stroke();
   }
 }
 
@@ -25,7 +26,7 @@ class Effect {
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.particles = [];
-    this.numberOfParticles = 20;
+    this.numberOfParticles = 200;
     this.createParticles();
   }
   createParticles() {
