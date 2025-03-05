@@ -18,6 +18,9 @@ class Particle {
     context.fill();
     context.stroke();
   }
+  update() {
+    this.x++;
+  }
 }
 
 class Effect {
@@ -37,6 +40,7 @@ class Effect {
   handleParticles(context) {
     this.particles.forEach((particle) => {
       particle.draw(context);
+      particle.update();
     });
   }
 }
@@ -45,7 +49,7 @@ const effect = new Effect(canvas);
 effect.handleParticles(ctx);
 
 function animate() {
-  //
+  effect.handleParticles(ctx);
   requestAnimationFrame(animate);
 }
 animate();
