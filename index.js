@@ -10,7 +10,7 @@ class Particle {
     this.radius = Math.random() * 40 + 5;
     this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
     this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
-    this.vx = 1;
+    this.vx = Math.random() * 4 - 2;
   }
   draw(context) {
     context.beginPath();
