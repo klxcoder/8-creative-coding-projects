@@ -4,6 +4,12 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+gradient.addColorStop(0, 'white');
+gradient.addColorStop(0.5, 'magenta');
+gradient.addColorStop(1, 'blue');
+ctx.fillStyle = gradient;
+
 class Particle {
   constructor(effect) {
     this.effect = effect;
@@ -16,7 +22,6 @@ class Particle {
   draw(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.fillStyle = `hsl(${this.x * 0.5}, 100%, 50%)`;
     context.fill();
     context.stroke();
   }
