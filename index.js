@@ -7,9 +7,9 @@ canvas.height = window.innerHeight;
 class Particle {
   constructor(effect) {
     this.effect = effect;
-    this.x = Math.random() * this.effect.width;
-    this.y = Math.random() * this.effect.height;
     this.radius = 15;
+    this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
+    this.y = Math.random() * this.effect.height;
   }
   draw(context) {
     context.beginPath();
