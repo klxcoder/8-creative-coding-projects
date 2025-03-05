@@ -49,6 +49,7 @@ const effect = new Effect(canvas);
 effect.handleParticles(ctx);
 
 function animate() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   effect.handleParticles(ctx);
   requestAnimationFrame(animate);
 }
