@@ -21,7 +21,7 @@ class Particle {
   }
   update() {
     this.x += this.vx;
-    if (this.x > this.effect.width) this.vx *= -1;
+    if (this.x > this.effect.width - this.radius || this.x < this.radius) this.vx *= -1;
   }
 }
 
