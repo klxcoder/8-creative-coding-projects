@@ -136,6 +136,7 @@ class StarParticle extends SunriseParticle {
       plugins,
       dv,
     });
+    this.friction = 0.6;
     this.width = this.height = 50 * (Math.random() * 0.8 + 0.2);
     this.frameX = getRandomInt(0, 2);
     this.frameY = getRandomInt(0, 2);
