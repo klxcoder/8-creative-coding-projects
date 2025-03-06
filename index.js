@@ -107,6 +107,15 @@ const Connector = {
   }
 };
 
+const Border = {
+  draw(particle, context) {
+    context.save();
+    context.strokeStyle = 'black';
+    context.stroke();
+    context.restore();
+  }
+}
+
 class Effect {
   constructor({
     canvas,
@@ -188,7 +197,7 @@ class BubbleEffect extends Effect {
     super({
       canvas,
       context,
-      plugins: [],
+      plugins: [Border],
       colorStops: ['red', 'magenta'],
       dv: 0.2,
     });
