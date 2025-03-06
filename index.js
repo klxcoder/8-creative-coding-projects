@@ -9,6 +9,7 @@ gradient.addColorStop(0, 'white');
 gradient.addColorStop(0.5, 'magenta');
 gradient.addColorStop(1, 'blue');
 ctx.fillStyle = gradient;
+ctx.strokeStyle = 'white';
 
 class Particle {
   constructor(effect) {
