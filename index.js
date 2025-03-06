@@ -8,7 +8,11 @@ canvas.height = window.innerHeight;
 
 // Particle Class with Plugin Support
 class Particle {
-  constructor(effect, index, plugins = []) {
+  constructor({
+    effect,
+    index,
+    plugins = [],
+  }) {
     this.effect = effect;
     this.index = index;
     this.radius = getRandomInt(4, 15);
@@ -139,7 +143,11 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new Particle(this, i, this.plugins));
+      this.particles.push(new Particle({
+        effect: this,
+        index: i,
+        plugins: this.plugins,
+      }));
     }
   }
   handleParticles(context) {
