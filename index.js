@@ -152,7 +152,8 @@ class GravityParticle extends Particle {
       particleRect.y + particleRect.h > this.effect.textRect.y
     ) {
       // Collision detected!
-      this.vy = -Math.abs(this.vy);
+      this.vy = -Math.abs(this.vy); // make it all way bound up
+      this.vx *= 1.1; // make it bounce faster in horizontal direction
     }
     this.effect.context.strokeRect(
       particleRect.x,
