@@ -34,8 +34,9 @@ class Particle {
       const dy = this.y - this.effect.mouse.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
       if (distance < this.effect.mouse.radius) {
-        this.vx += dx / 500;
-        this.vy += dy / 500;
+        const angle = Math.atan2(dy, dx);
+        this.x += Math.cos(angle);
+        this.y += Math.sin(angle);
       }
     }
     this.x += this.vx;
