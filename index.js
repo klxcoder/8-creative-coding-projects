@@ -118,7 +118,6 @@ class StarParticle extends SunriseParticle {
 class GravityParticle extends Particle {
   constructor(config) {
     super(config);
-    this.vy = 0;
     this.gravity = this.radius * 0.001;
   }
   update() {
@@ -132,14 +131,18 @@ class GravityParticle extends Particle {
       this.x = this.effect.width - this.radius;
       this.vx *= -1;
     }
-
-    if (this.y < this.radius) {
-      this.y = this.radius;
-      this.vy *= -1;
-    } else if (this.y > this.effect.height - this.radius) {
-      this.y = this.effect.height - this.radius;
-      this.vy *= -0.6;
+    if (this.y > this.effect.height - this.radius) {
+      // Will bounce to the ground
+      // this.y = this.effect.height - this.radius;
+      // this.vy *= -0.6;
+      // Will reset
+      this.reset();
     }
+  }
+  reset() {
+    super.reset();
+    this.y = -this.radius - Math.random() * this.effect.height * 0.5;
+    this.vy = 0;
   }
 }
 
