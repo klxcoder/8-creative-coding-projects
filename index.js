@@ -252,6 +252,7 @@ class Effect {
     canvas,
     context,
     plugins = [],
+    backgroundColorStops = [],
     particleColorStops = [],
     dv,
     particleClass,
@@ -264,6 +265,7 @@ class Effect {
     this.context = context;
     this.particles = [];
     this.plugins = plugins;
+    this.backgroundColorStops = backgroundColorStops;
     this.particleColorStops = particleColorStops;
     this.dv = dv;
     this.particleClass = particleClass;
@@ -287,10 +289,9 @@ class Effect {
     backgroundCanvas.height = this.canvas.height;
     //
     const backgroundCtx = backgroundCanvas.getContext('2d');
-
+    //
     const gradient = backgroundCtx.createLinearGradient(0, 0, 0, this.canvas.height);
-    gradient.addColorStop(0, 'darkblue');
-    gradient.addColorStop(1, 'lightblue');
+    this.backgroundColorStops.forEach((colorStop, index) => gradient.addColorStop(index / (this.particleColorStops.length - 1), colorStop));
     backgroundCtx.fillStyle = gradient;
     //
     backgroundCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -341,6 +342,7 @@ class SunriseEffect extends Effect {
       canvas,
       context,
       plugins: [LineDrawer, Connector],
+      backgroundColorStops: ['darkblue', 'lightblue'],
       particleColorStops: ['white', 'gold'],
       dv: 1,
       particleClass: SunriseParticle,
@@ -356,6 +358,7 @@ class BubbleEffect extends Effect {
       canvas,
       context,
       plugins: [Border, Reflection],
+      backgroundColorStops: ['lightblue', 'darkblue'],
       particleColorStops: ['red', 'magenta'],
       dv: 0.2,
       particleClass: BubbleParticle,
@@ -371,6 +374,7 @@ class StarEffect extends Effect {
       canvas,
       context,
       plugins: [Border, Star],
+      backgroundColorStops: ['black', 'gray'],
       particleColorStops: ['white', 'black'],
       dv: 0.2,
       particleClass: StarParticle,
