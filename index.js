@@ -362,7 +362,7 @@ class LiquidEffect extends Effect {
   }
 }
 
-const updateEvents = (effect) => {
+const updateEvents = (effect, liquid, canvas) => {
   window.onresize = () => effect.resize(window.innerWidth, window.innerHeight);
   window.onmousemove = (event) => {
     if (effect.mouse.pressed) effect.assignMouseCordinate(event);
@@ -375,6 +375,11 @@ const updateEvents = (effect) => {
     effect.mouse.pressed = false;
   };
   effect.initCtx();
+  if (liquid) {
+    canvas.classList.add('liquid');
+  } else {
+    canvas.classList.remove('liquid');
+  }
 };
 
 window.addEventListener('load', () => {
@@ -390,18 +395,19 @@ window.addEventListener('load', () => {
     new StarEffect(canvas, ctx),
   ];
   let effectIndex = 0;
+  let liquidIndex = 0;
   let effect = effects[effectIndex];
   //
   document.addEventListener('contextmenu', (e) => {
     effectIndex = (effectIndex + 1) % effects.length;
     effect = effects[effectIndex];
     // Update event listeners to use the new effect
-    updateEvents(effect);
+    updateEvents(effect, effectIndex === liquidIndex, canvas);
     // Prevent default context menu from appearing
     e.preventDefault();
   });
   // Initialize events
-  updateEvents(effect);
+  updateEvents(effect, effectIndex === liquidIndex, canvas);
   //
   function animate() {
     ctx.drawImage(effect.backgroundCanvas, 0, 0);

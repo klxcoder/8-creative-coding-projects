@@ -10,6 +10,10 @@
   left: 0;
 }
 
+.liquid {
+  filter: blur(7px) contrast(20);
+}
+
 #stars_sprite {
   display: none;
 }
