@@ -199,6 +199,7 @@ class Effect {
     colorStops = [],
     dv,
     particleClass,
+    radius,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -217,7 +218,7 @@ class Effect {
       x: 0,
       y: 0,
       pressed: false,
-      radius: 150,
+      radius: radius,
     }
   }
   initCtx() {
@@ -266,6 +267,7 @@ class SunriseEffect extends Effect {
       colorStops: ['white', 'gold'],
       dv: 1,
       particleClass: SunriseParticle,
+      radius: 150,
     });
   }
 }
@@ -279,6 +281,7 @@ class BubbleEffect extends Effect {
       colorStops: ['red', 'magenta'],
       dv: 0.2,
       particleClass: BubbleParticle,
+      radius: 60,
     });
   }
 }
