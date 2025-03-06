@@ -115,6 +115,34 @@ class StarParticle extends SunriseParticle {
   }
 }
 
+class GravityParticle extends Particle {
+  constructor(config) {
+    super(config);
+    this.vy = 0;
+    this.gravity = this.radius * 0.001;
+  }
+  update() {
+    this.vy += this.gravity;
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < this.radius) {
+      this.x = this.radius;
+      this.vx *= -1;
+    } else if (this.x > this.effect.width - this.radius) {
+      this.x = this.effect.width - this.radius;
+      this.vx *= -1;
+    }
+
+    if (this.y < this.radius) {
+      this.y = this.radius;
+      this.vy *= -1;
+    } else if (this.y > this.effect.height - this.radius) {
+      this.y = this.effect.height - this.radius;
+      this.vy *= -0.6;
+    }
+  }
+}
+
 // Plugins
 
 const LineDrawer = {
@@ -362,6 +390,24 @@ class LiquidEffect extends Effect {
   }
 }
 
+class GravityEffect extends Effect {
+  constructor(canvas, context) {
+    super({
+      canvas,
+      context,
+      plugins: [CircleFill, Connector],
+      backgroundColorStops: ['black', 'black'],
+      particleColorStops: ['white', 'white'],
+      dv: 1,
+      particleClass: GravityParticle,
+      radius: 150,
+      numberOfParticles: 200,
+      radiusFrom: 10,
+      radiusTo: 20,
+    });
+  }
+}
+
 const updateEvents = (effect, liquid, canvas) => {
   window.onresize = () => effect.resize(window.innerWidth, window.innerHeight);
   window.onmousemove = (event) => {
@@ -389,13 +435,14 @@ window.addEventListener('load', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const effects = [
-    new LiquidEffect(canvas, ctx),
+    new GravityEffect(canvas, ctx),
+    new LiquidEffect(canvas, ctx), // => liquidIndex
     new SunriseEffect(canvas, ctx),
     new BubbleEffect(canvas, ctx),
     new StarEffect(canvas, ctx),
   ];
   let effectIndex = 0;
-  let liquidIndex = 0;
+  let liquidIndex = 1;
   let effect = effects[effectIndex];
   //
   document.addEventListener('contextmenu', (e) => {
