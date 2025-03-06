@@ -28,12 +28,17 @@ class Particle {
     this.friction = 0.8;
   }
   draw(context) {
+    // Draw line
     if (this.index % 5 === 0) {
+      context.save();
+      context.globalAlpha = 0.2;
       context.beginPath();
       context.moveTo(this.x, this.y);
       context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
       context.stroke();
+      context.restore();
     }
+    // Draw particle
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
