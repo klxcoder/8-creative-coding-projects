@@ -485,7 +485,7 @@ window.addEventListener('load', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   //
-  const text = "@KLXCODER";
+  const text = "@KLXCODER - Learn to code";
 
   const effects = [
     new GravityEffect(canvas, ctx, text),
