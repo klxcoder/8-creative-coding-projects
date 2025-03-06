@@ -29,7 +29,6 @@ class Particle {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
-    context.stroke();
     this.plugins.forEach(plugin => plugin.draw(this, context));
   }
   update() {
@@ -116,6 +115,17 @@ const Border = {
   }
 }
 
+const Reflection = {
+  draw(particle, context) {
+    context.save();
+    context.fillStyle = 'white';
+    context.beginPath();
+    context.arc(particle.x - particle.radius * 0.2, particle.y - particle.radius * 0.3, particle.radius * 0.6, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  }
+}
+
 class Effect {
   constructor({
     canvas,
@@ -197,7 +207,7 @@ class BubbleEffect extends Effect {
     super({
       canvas,
       context,
-      plugins: [Border],
+      plugins: [Border, Reflection],
       colorStops: ['red', 'magenta'],
       dv: 0.2,
     });
