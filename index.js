@@ -12,10 +12,9 @@ class Particle {
   }) {
     this.effect = effect;
     this.index = index;
+    this.dv = dv;
     this.radius = getRandomInt(radiusFrom, radiusTo);
     this.reset();
-    this.vx = Math.random() * 2 * dv - dv;
-    this.vy = Math.random() * 2 * dv - dv;
     this.plugins = plugins;
   }
   draw(context) {
@@ -26,6 +25,8 @@ class Particle {
   reset() {
     this.x = this.radius + getRandomInt(0, this.effect.width - this.radius * 2);
     this.y = this.radius + getRandomInt(0, this.effect.height - this.radius * 2);
+    this.vx = Math.random() * 2 * this.dv - this.dv;
+    this.vy = Math.random() * 2 * this.dv - this.dv;
   }
 }
 
