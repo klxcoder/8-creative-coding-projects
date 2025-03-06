@@ -118,7 +118,7 @@ class StarParticle extends SunriseParticle {
 class GravityParticle extends Particle {
   constructor(config) {
     super(config);
-    this.gravity = this.radius * 0.0001;
+    this.gravity = this.radius * 0.005;
   }
   update() {
     this.vy += this.gravity;
@@ -152,7 +152,7 @@ class GravityParticle extends Particle {
       particleRect.y + particleRect.h > this.effect.textRect.y
     ) {
       // Collision detected!
-      this.vy *= -1;
+      this.vy = -Math.abs(this.vy);
     }
     this.effect.context.strokeRect(
       particleRect.x,
