@@ -267,6 +267,7 @@ class Effect {
     numberOfParticles,
     radiusFrom,
     radiusTo,
+    text,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -281,7 +282,9 @@ class Effect {
     this.numberOfParticles = numberOfParticles;
     this.radiusFrom = radiusFrom;
     this.radiusTo = radiusTo;
+    this.text = text;
     this.backgroundCanvas = this.getBackgroundCanvas();
+    this.textRect = this.getTextRect();
     this.initCtx();
     this.createParticles();
 
@@ -309,12 +312,27 @@ class Effect {
     //
     return backgroundCanvas;
   }
+  getTextRect() {
+    const textWidth = this.context.measureText(this.text).width;
+    const textHeight = 40; // Approximate from font size
+    const textRect = {
+      x: this.canvas.width / 2 - textWidth / 2 - 6,
+      y: this.canvas.height / 2 - textHeight / 2 - 6,
+      w: textWidth + 10,
+      h: textHeight + 10
+    }
+    return textRect;
+  }
   initCtx() {
     const gradient = this.context.createLinearGradient(0, 0, 0, this.canvas.height);
     this.particleColorStops.forEach((colorStop, index) => gradient.addColorStop(index / (this.particleColorStops.length - 1), colorStop));
     this.context.fillStyle = gradient;
     this.context.strokeStyle = gradient;
+    this.context.font = "bold 40px sans-serif";
+    this.context.textAlign = "center"; // Center horizontally
+    this.context.textBaseline = "middle"; // Center vertically
     this.backgroundCanvas = this.getBackgroundCanvas();
+    this.textRect = this.getTextRect();
   }
   assignMouseCordinate(event) {
     this.mouse.x = event.x;
@@ -422,7 +440,7 @@ class LiquidEffect extends Effect {
 }
 
 class GravityEffect extends Effect {
-  constructor(canvas, context, textRect) {
+  constructor(canvas, context, text) {
     super({
       canvas,
       context,
@@ -435,8 +453,8 @@ class GravityEffect extends Effect {
       numberOfParticles: 200,
       radiusFrom: 5,
       radiusTo: 10,
+      text,
     });
-    this.textRect = textRect;
   }
 }
 
@@ -468,20 +486,9 @@ window.addEventListener('load', () => {
   canvas.height = window.innerHeight;
   //
   const text = "@KLXCODER";
-  ctx.font = "bold 40px sans-serif";
-  ctx.textAlign = "center"; // Center horizontally
-  ctx.textBaseline = "middle"; // Center vertically
-  const textWidth = ctx.measureText(text).width;
-  const textHeight = 40; // Approximate from font size
-  const textRect = {
-    x: canvas.width / 2 - textWidth / 2 - 6,
-    y: canvas.height / 2 - textHeight / 2 - 6,
-    w: textWidth + 10,
-    h: textHeight + 10
-  }
 
   const effects = [
-    new GravityEffect(canvas, ctx, textRect),
+    new GravityEffect(canvas, ctx, text),
     new LiquidEffect(canvas, ctx), // => liquidIndex
     new SunriseEffect(canvas, ctx),
     new BubbleEffect(canvas, ctx),
