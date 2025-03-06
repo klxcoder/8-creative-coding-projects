@@ -238,7 +238,6 @@ const Reflection = {
 const Star = {
   image: document.getElementById('stars_sprite'),
   draw(particle, context) {
-    console.log('Here image = ', this.image);
     context.save();
     context.fillStyle = 'white';
     context.beginPath();
