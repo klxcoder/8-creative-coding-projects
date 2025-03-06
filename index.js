@@ -18,8 +18,7 @@ class Particle {
   constructor(effect) {
     this.effect = effect;
     this.radius = Math.random() * 5 + 2;
-    this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
-    this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
+    this.reset();
     this.vx = Math.random() * 1 - 0.5;
     this.vy = Math.random() * 1 - 0.5;
   }
@@ -34,6 +33,10 @@ class Particle {
     this.y += this.vy;
     if (this.x > this.effect.width - this.radius || this.x < this.radius) this.vx *= -1;
     if (this.y > this.effect.height - this.radius || this.y < this.radius) this.vy *= -1;
+  }
+  reset() {
+    this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
+    this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
   }
 }
 
@@ -88,6 +91,8 @@ class Effect {
     this.height = this.canvas.height = height;
     // Have to re-define ctx styles after resizing canvas
     initCtx(this.canvas, this.context);
+    // Reset particles
+    this.particles.forEach((particle) => particle.reset());
   }
 }
 
