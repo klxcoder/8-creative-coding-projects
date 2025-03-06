@@ -81,7 +81,8 @@ const LineDrawer = {
 const Connector = {
   draw(particle, context) {
     const MAX_DISTANCE_SQUARE = 100 * 100;
-    particle.effect.particles.forEach(other => {
+    for (let i = particle.index + 1; i < particle.effect.particles.length; i++) {
+      const other = particle.effect.particles[i];
       if (particle !== other) {
         const dx = particle.x - other.x;
         const dy = particle.y - other.y;
@@ -97,7 +98,7 @@ const Connector = {
           context.restore();
         }
       }
-    });
+    };
   }
 };
 
