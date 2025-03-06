@@ -1,11 +1,5 @@
 const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-// setup
-const canvas = document.getElementById('canvas1');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-
 // Particle Class with Plugin Support
 class Particle {
   constructor({
@@ -289,14 +283,7 @@ class BubbleEffect extends Effect {
   }
 }
 
-const effects = [
-  new SunriseEffect(canvas, ctx),
-  new BubbleEffect(canvas, ctx),
-];
-let effectIndex = 0;
-let effect = effects[effectIndex];
-
-const updateEvents = () => {
+const updateEvents = (effect) => {
   window.onresize = () => effect.resize(window.innerWidth, window.innerHeight);
   window.onmousemove = (event) => {
     if (effect.mouse.pressed) effect.assignMouseCordinate(event);
@@ -310,25 +297,35 @@ const updateEvents = () => {
   };
   effect.initCtx();
 };
-// Initialize events
-updateEvents();
-
-document.addEventListener('contextmenu', (e) => {
-  effectIndex = (effectIndex + 1) % effects.length;
-  effect = effects[effectIndex];
-  // Update event listeners to use the new effect
-  updateEvents();
-  // Prevent default context menu from appearing
-  e.preventDefault();
-});
-
-function animate() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  effect.handleParticles(ctx);
-  requestAnimationFrame(animate);
-}
-animate();
 
 window.addEventListener('load', () => {
-  console.log('Window loaded');
+  // setup
+  const canvas = document.getElementById('canvas1');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const effects = [
+    new SunriseEffect(canvas, ctx),
+    new BubbleEffect(canvas, ctx),
+  ];
+  let effectIndex = 0;
+  let effect = effects[effectIndex];
+  //
+  document.addEventListener('contextmenu', (e) => {
+    effectIndex = (effectIndex + 1) % effects.length;
+    effect = effects[effectIndex];
+    // Update event listeners to use the new effect
+    updateEvents(effect);
+    // Prevent default context menu from appearing
+    e.preventDefault();
+  });
+  // Initialize events
+  updateEvents(effect);
+  //
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    effect.handleParticles(ctx);
+    requestAnimationFrame(animate);
+  }
+  animate();
 });
