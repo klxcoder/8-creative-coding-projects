@@ -63,10 +63,14 @@ class Effect {
         const dy = this.particles[i].y - this.particles[j].y;
         const distance_square = dx * dx + dy * dy;
         if (distance_square < MAX_DISTANCE_SQUARE) {
+          context.save();
+          const opacity = 1 - distance_square / MAX_DISTANCE_SQUARE;
+          context.globalAlpha = opacity;
           context.beginPath();
           context.moveTo(this.particles[i].x, this.particles[i].y);
           context.lineTo(this.particles[j].x, this.particles[j].y);
           context.stroke();
+          context.restore();
         }
       }
     }
