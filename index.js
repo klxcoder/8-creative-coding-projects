@@ -6,15 +6,6 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-function initCtx(canvas, ctx) {
-  const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-  gradient.addColorStop(0, 'white');
-  gradient.addColorStop(1, 'gold');
-  ctx.fillStyle = gradient;
-  ctx.strokeStyle = gradient;
-}
-initCtx(canvas, ctx);
-
 class Particle {
   constructor(effect, index) {
     this.effect = effect;
@@ -88,6 +79,7 @@ class Effect {
     this.context = context;
     this.particles = [];
     this.numberOfParticles = 200;
+    this.initCtx();
     this.createParticles();
 
     this.mouse = {
@@ -116,6 +108,13 @@ class Effect {
       this.mouse.pressed = false;
     });
 
+  }
+  initCtx() {
+    const gradient = this.context.createLinearGradient(0, 0, 0, this.canvas.height);
+    gradient.addColorStop(0, 'white');
+    gradient.addColorStop(1, 'gold');
+    this.context.fillStyle = gradient;
+    this.context.strokeStyle = gradient;
   }
   assignMouseCordinate(event) {
     this.mouse.x = event.x;
