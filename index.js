@@ -32,6 +32,28 @@ class Particle {
     this.plugins.forEach(plugin => plugin.draw(this, context));
   }
   update() {
+  }
+  reset() {
+    this.x = this.radius + getRandomInt(0, this.effect.width - this.radius * 2);
+    this.y = this.radius + getRandomInt(0, this.effect.height - this.radius * 2);
+  }
+}
+
+class SunriseParticle extends Particle {
+  constructor({
+    effect,
+    index,
+    plugins = [],
+    dv,
+  }) {
+    super({
+      effect,
+      index,
+      plugins,
+      dv,
+    });
+  }
+  update() {
     if (this.effect.mouse.pressed) {
       const dx = this.x - this.effect.mouse.x;
       const dy = this.y - this.effect.mouse.y;
@@ -61,9 +83,21 @@ class Particle {
       this.vy *= -1;
     }
   }
-  reset() {
-    this.x = this.radius + getRandomInt(0, this.effect.width - this.radius * 2);
-    this.y = this.radius + getRandomInt(0, this.effect.height - this.radius * 2);
+}
+
+class BubbleParticle extends Particle {
+  constructor({
+    effect,
+    index,
+    plugins = [],
+    dv,
+  }) {
+    super({
+      effect,
+      index,
+      plugins,
+      dv,
+    });
   }
 }
 
@@ -133,6 +167,7 @@ class Effect {
     plugins = [],
     colorStops = [],
     dv,
+    particleClass,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -141,8 +176,9 @@ class Effect {
     this.particles = [];
     this.plugins = plugins;
     this.colorStops = colorStops;
-    this.dv = dv,
-      this.numberOfParticles = 200;
+    this.dv = dv;
+    this.particleClass = particleClass;
+    this.numberOfParticles = 200;
     this.initCtx();
     this.createParticles();
 
@@ -165,7 +201,7 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new Particle({
+      this.particles.push(new this.particleClass({
         effect: this,
         index: i,
         plugins: this.plugins,
@@ -198,6 +234,7 @@ class SunriseEffect extends Effect {
       plugins: [LineDrawer, Connector],
       colorStops: ['white', 'gold'],
       dv: 1,
+      particleClass: SunriseParticle,
     });
   }
 }
@@ -210,6 +247,7 @@ class BubbleEffect extends Effect {
       plugins: [Border, Reflection],
       colorStops: ['red', 'magenta'],
       dv: 0.2,
+      particleClass: BubbleParticle,
     });
   }
 }
