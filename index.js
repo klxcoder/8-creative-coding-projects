@@ -118,7 +118,7 @@ class StarParticle extends SunriseParticle {
 class GravityParticle extends Particle {
   constructor(config) {
     super(config);
-    this.gravity = this.radius * 0.001;
+    this.gravity = this.radius * 0.0001;
   }
   update() {
     this.vy += this.gravity;
@@ -138,6 +138,34 @@ class GravityParticle extends Particle {
       // Will reset
       this.reset();
     }
+    const particleRect = {
+      x: this.x - this.radius,
+      y: this.y - this.radius,
+      w: 2 * this.radius,
+      h: 2 * this.radius,
+    }
+    // https://developer.mozilla.org/en-US/docs/Games/Techniques/2D_collision_detection
+    if (
+      particleRect.x < this.effect.textRect.x + this.effect.textRect.w &&
+      particleRect.x + particleRect.w > this.effect.textRect.x &&
+      particleRect.y < this.effect.textRect.y + this.effect.textRect.h &&
+      particleRect.y + particleRect.h > this.effect.textRect.y
+    ) {
+      // Collision detected!
+      this.vy *= -1;
+    }
+    this.effect.context.strokeRect(
+      particleRect.x,
+      particleRect.y,
+      particleRect.w,
+      particleRect.h,
+    );
+    this.effect.context.strokeRect(
+      this.effect.textRect.x,
+      this.effect.textRect.y,
+      this.effect.textRect.w,
+      this.effect.textRect.h,
+    );
   }
   reset() {
     super.reset();
@@ -394,7 +422,7 @@ class LiquidEffect extends Effect {
 }
 
 class GravityEffect extends Effect {
-  constructor(canvas, context) {
+  constructor(canvas, context, textRect) {
     super({
       canvas,
       context,
@@ -405,9 +433,10 @@ class GravityEffect extends Effect {
       particleClass: GravityParticle,
       radius: 150,
       numberOfParticles: 200,
-      radiusFrom: 10,
-      radiusTo: 20,
+      radiusFrom: 5,
+      radiusTo: 10,
     });
+    this.textRect = textRect;
   }
 }
 
@@ -437,8 +466,22 @@ window.addEventListener('load', () => {
   const ctx = canvas.getContext('2d');
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
+  //
+  const text = "@KLXCODER";
+  ctx.font = "bold 40px sans-serif";
+  ctx.textAlign = "center"; // Center horizontally
+  ctx.textBaseline = "middle"; // Center vertically
+  const textWidth = ctx.measureText(text).width;
+  const textHeight = 40; // Approximate from font size
+  const textRect = {
+    x: canvas.width / 2 - textWidth / 2 - 6,
+    y: canvas.height / 2 - textHeight / 2 - 6,
+    w: textWidth + 10,
+    h: textHeight + 10
+  }
+
   const effects = [
-    new GravityEffect(canvas, ctx),
+    new GravityEffect(canvas, ctx, textRect),
     new LiquidEffect(canvas, ctx), // => liquidIndex
     new SunriseEffect(canvas, ctx),
     new BubbleEffect(canvas, ctx),
@@ -461,22 +504,7 @@ window.addEventListener('load', () => {
   //
   function animate() {
     ctx.drawImage(effect.backgroundCanvas, 0, 0);
-    //
-    const text = "@KLXCODER"
-    ctx.font = "bold 40px sans-serif";
-    ctx.textAlign = "center"; // Center horizontally
-    ctx.textBaseline = "middle"; // Center vertically
     ctx.fillText(text, canvas.width / 2, canvas.height / 2);
-    //
-    const textWidth = ctx.measureText(text).width;
-    const textHeight = 40; // Approximate from font size
-    ctx.strokeRect(
-      canvas.width / 2 - textWidth / 2 - 6,
-      canvas.height / 2 - textHeight / 2 - 6,
-      textWidth + 10,
-      textHeight + 10
-    );
-    //
     effect.handleParticles(ctx);
     requestAnimationFrame(animate);
   }
