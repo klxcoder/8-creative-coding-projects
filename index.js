@@ -123,7 +123,7 @@ class BubbleParticle extends Particle {
   }
 }
 
-class StarParticle extends Particle {
+class StarParticle extends SunriseParticle {
   constructor({
     effect,
     index,
@@ -136,42 +136,9 @@ class StarParticle extends Particle {
       plugins,
       dv,
     });
-    this.pushX = 0;
-    this.pushY = 0;
-    this.friction = 0.8;
     this.width = this.height = 50 * (Math.random() * 0.8 + 0.2);
     this.frameX = getRandomInt(0, 2);
     this.frameY = getRandomInt(0, 2);
-  }
-  update() {
-    if (this.effect.mouse.pressed) {
-      const dx = this.x - this.effect.mouse.x;
-      const dy = this.y - this.effect.mouse.y;
-      const distance = Math.hypot(dy, dx);
-      const force = this.effect.mouse.radius / distance;
-      if (distance < this.effect.mouse.radius) {
-        const angle = Math.atan2(dy, dx);
-        this.pushX += Math.cos(angle) * force;
-        this.pushY += Math.sin(angle) * force;
-      }
-    }
-    this.x += (this.pushX *= this.friction) + this.vx;
-    this.y += (this.pushY *= this.friction) + this.vy;
-    if (this.x < this.radius) {
-      this.x = this.radius;
-      this.vx *= -1;
-    } else if (this.x > this.effect.width - this.radius) {
-      this.x = this.effect.width - this.radius;
-      this.vx *= -1;
-    }
-
-    if (this.y < this.radius) {
-      this.y = this.radius;
-      this.vy *= -1;
-    } else if (this.y > this.effect.height - this.radius) {
-      this.y = this.effect.height - this.radius;
-      this.vy *= -1;
-    }
   }
 }
 
