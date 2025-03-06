@@ -116,12 +116,6 @@ class Effect {
       this.mouse.pressed = false;
     });
 
-    document.addEventListener('contextmenu', (e) => {
-      console.log('Right mouse button clicked');
-      // Prevent default context menu from appearing
-      e.preventDefault();
-    });
-
   }
   assignMouseCordinate(event) {
     this.mouse.x = event.x;
@@ -170,7 +164,20 @@ class Effect {
   }
 }
 
-const effect = new Effect(canvas, ctx);
+
+const effects = [
+  new Effect(canvas, ctx),
+  new Effect(canvas, ctx),
+];
+let effectIndex = 0;
+let effect = effects[effectIndex];
+
+document.addEventListener('contextmenu', (e) => {
+  effectIndex = (effectIndex + 1) % effects.length;
+  effect = effects[effectIndex];
+  // Prevent default context menu from appearing
+  e.preventDefault();
+});
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
