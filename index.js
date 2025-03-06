@@ -103,7 +103,12 @@ const Connector = {
 };
 
 class Effect {
-  constructor(canvas, context, plugins = [], colorStops = []) {
+  constructor({
+    canvas,
+    context,
+    plugins = [],
+    colorStops = [],
+  }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
@@ -156,13 +161,23 @@ class Effect {
 
 class SunriseEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, [LineDrawer, Connector], ['white', 'gold']);
+    super({
+      canvas,
+      context,
+      plugins: [LineDrawer, Connector],
+      colorStops: ['white', 'gold'],
+    });
   }
 }
 
 class BubbleEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, [], ['red', 'magenta', 'blue', 'green', 'yellow']);
+    super({
+      canvas,
+      context,
+      plugins: [],
+      colorStops: ['red', 'magenta', 'blue', 'green', 'yellow'],
+    });
   }
 }
 
