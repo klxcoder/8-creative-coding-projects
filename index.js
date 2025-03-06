@@ -18,22 +18,14 @@ class Particle {
     this.pushY = 0;
     this.friction = 0.8;
   }
-  drawLine(context) {
-    if (this.index % 5 === 0) {
-      context.save();
-      context.globalAlpha = 0.2;
-      context.beginPath();
-      context.moveTo(this.x, this.y);
-      context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
-      context.stroke();
-      context.restore();
-    }
-  }
   drawParticle(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
     context.stroke();
+  }
+  draw(context) {
+    this.drawParticle(context);
   }
   update() {
     if (this.effect.mouse.pressed) {
@@ -71,12 +63,30 @@ class Particle {
   }
 }
 
+class SunriseParticle extends Particle {
+  constructor(effect, index) {
+    super(effect, index);
+  }
+  drawLine(context) {
+    if (this.index % 5 === 0) {
+      context.save();
+      context.globalAlpha = 0.2;
+      context.beginPath();
+      context.moveTo(this.x, this.y);
+      context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
+      context.stroke();
+      context.restore();
+    }
+  }
+}
+
 class Effect {
-  constructor(canvas, context) {
+  constructor(canvas, context, particleClass) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.context = context;
+    this.particleClass = particleClass;
     this.particles = [];
     this.numberOfParticles = 200;
     this.initCtx();
@@ -122,7 +132,7 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new Particle(this, i));
+      this.particles.push(new this.particleClass(this, i));
     }
   }
   handleParticles(context) {
@@ -140,7 +150,7 @@ class Effect {
 
 class SunriseEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context);
+    super(canvas, context, SunriseParticle);
   }
   handleParticles(context) {
     this.connectParticles(context);
@@ -174,7 +184,7 @@ class SunriseEffect extends Effect {
 
 class BubbleEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context);
+    super(canvas, context, Particle);
   }
   handleParticles(context) {
     this.particles.forEach((particle) => {
