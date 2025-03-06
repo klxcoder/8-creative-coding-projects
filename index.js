@@ -49,11 +49,11 @@ class Effect {
     }
   }
   handleParticles(context) {
+    this.connectParticles(context);
     this.particles.forEach((particle) => {
       particle.draw(context);
       particle.update();
     });
-    this.connectParticles(context);
   }
   connectParticles(context) {
     const MAX_DISTANCE_SQUARE = 100 * 100; // 100px
