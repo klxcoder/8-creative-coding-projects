@@ -241,7 +241,6 @@ const Star = {
     context.save();
     context.fillStyle = 'white';
     context.beginPath();
-    context.arc(particle.x - particle.radius * 0.2, particle.y - particle.radius * 0.3, particle.radius * 0.6, 0, Math.PI * 2);
     context.drawImage(this.image, particle.x, particle.y, particle.width, particle.height);
     context.fill();
     context.restore();
