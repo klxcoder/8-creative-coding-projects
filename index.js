@@ -98,15 +98,20 @@ class BubbleParticle extends Particle {
       plugins,
       dv,
     });
+    this.minRadius = this.radius;
+    this.maxRadius = this.radius * 5;
   }
   update() {
     if (this.effect.mouse.pressed) {
       const dx = this.x - this.effect.mouse.x;
       const dy = this.y - this.effect.mouse.y;
       const distance = Math.hypot(dy, dx);
-      if (distance < this.effect.mouse.radius) {
+      if (distance < this.effect.mouse.radius && this.radius < this.maxRadius) {
         this.radius += 2;
       }
+    }
+    if (this.radius > this.minRadius) {
+      this.radius -= 0.1;
     }
     this.x += this.vx;
     this.y += this.vy;
