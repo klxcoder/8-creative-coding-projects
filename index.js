@@ -56,11 +56,6 @@ class Particle {
       this.y = this.effect.height - this.radius;
       this.vy *= -1;
     }
-    /**
-    
-    if (this.x > this.effect.width - this.radius || this.x < this.radius) this.vx *= -1;
-    if (this.y > this.effect.height - this.radius || this.y < this.radius) this.vy *= -1;
-    */
   }
   reset() {
     this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
