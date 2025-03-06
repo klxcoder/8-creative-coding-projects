@@ -11,13 +11,14 @@ function initCtx(canvas, ctx) {
   gradient.addColorStop(0, 'white');
   gradient.addColorStop(1, 'gold');
   ctx.fillStyle = gradient;
-  ctx.strokeStyle = 'white';
+  ctx.strokeStyle = gradient;
 }
 initCtx(canvas, ctx);
 
 class Particle {
-  constructor(effect) {
+  constructor(effect, index) {
     this.effect = effect;
+    this.index = index;
     this.radius = getRandomInt(4, 15);
     this.reset();
     this.vx = Math.random() * 1 - 0.5;
@@ -27,6 +28,12 @@ class Particle {
     this.friction = 0.8;
   }
   draw(context) {
+    if (this.index % 5 === 0) {
+      context.beginPath();
+      context.moveTo(this.x, this.y);
+      context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
+      context.stroke();
+    }
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
@@ -112,7 +119,7 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new Particle(this));
+      this.particles.push(new Particle(this, i));
     }
   }
   handleParticles(context) {
