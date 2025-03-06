@@ -328,3 +328,7 @@ function animate() {
   requestAnimationFrame(animate);
 }
 animate();
+
+window.addEventListener('load', () => {
+  console.log('Window loaded');
+});
