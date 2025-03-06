@@ -89,8 +89,8 @@ class Effect {
       radius: 150,
     }
 
-    window.addEventListener('resize', (event) => { // use arrow function, not use regular function
-      this.resize(event.target.window.innerWidth, event.target.window.innerHeight);
+    window.addEventListener('resize', () => { // use arrow function, not use regular function
+      this.resize(window.innerWidth, window.innerHeight);
     });
 
     window.addEventListener('mousemove', (event) => {
