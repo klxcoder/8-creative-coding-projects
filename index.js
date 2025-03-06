@@ -12,13 +12,14 @@ class Particle {
     effect,
     index,
     plugins = [],
+    dv,
   }) {
     this.effect = effect;
     this.index = index;
     this.radius = getRandomInt(4, 15);
     this.reset();
-    this.vx = Math.random() - 0.5;
-    this.vy = Math.random() - 0.5;
+    this.vx = Math.random() * 2 * dv - dv;
+    this.vy = Math.random() * 2 * dv - dv;
     this.pushX = 0;
     this.pushY = 0;
     this.friction = 0.8;
@@ -112,6 +113,7 @@ class Effect {
     context,
     plugins = [],
     colorStops = [],
+    dv,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -120,7 +122,8 @@ class Effect {
     this.particles = [];
     this.plugins = plugins;
     this.colorStops = colorStops;
-    this.numberOfParticles = 200;
+    this.dv = dv,
+      this.numberOfParticles = 200;
     this.initCtx();
     this.createParticles();
 
@@ -147,6 +150,7 @@ class Effect {
         effect: this,
         index: i,
         plugins: this.plugins,
+        dv: this.dv,
       }));
     }
   }
@@ -174,6 +178,7 @@ class SunriseEffect extends Effect {
       context,
       plugins: [LineDrawer, Connector],
       colorStops: ['white', 'gold'],
+      dv: 1,
     });
   }
 }
@@ -184,7 +189,8 @@ class BubbleEffect extends Effect {
       canvas,
       context,
       plugins: [],
-      colorStops: ['red', 'magenta', 'blue', 'green', 'yellow'],
+      colorStops: ['red', 'magenta'],
+      dv: 0.2,
     });
   }
 }
