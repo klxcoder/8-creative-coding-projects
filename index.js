@@ -21,6 +21,9 @@ class Particle {
     this.reset();
     this.vx = Math.random() * 1 - 0.5;
     this.vy = Math.random() * 1 - 0.5;
+    this.pushX = 0;
+    this.pushY = 0;
+    this.friction = 0.8;
   }
   draw(context) {
     context.beginPath();
@@ -33,14 +36,16 @@ class Particle {
       const dx = this.x - this.effect.mouse.x;
       const dy = this.y - this.effect.mouse.y;
       const distance = Math.sqrt(dx * dx + dy * dy);
+      const force = this.effect.mouse.radius / distance;
       if (distance < this.effect.mouse.radius) {
         const angle = Math.atan2(dy, dx);
-        this.x += Math.cos(angle);
-        this.y += Math.sin(angle);
+        this.pushX += Math.cos(angle) * force;
+        this.pushY += Math.sin(angle) * force;
+        console.log(this.pushX, this.pushY);
       }
     }
-    this.x += this.vx;
-    this.y += this.vy;
+    this.x += (this.pushX *= this.friction) + this.vx;
+    this.y += (this.pushY *= this.friction) + this.vy;
     if (this.x < this.radius) {
       this.x = this.radius;
       this.vx *= -1;
