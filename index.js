@@ -104,7 +104,7 @@ class Effect {
       this.assignMouseCordinate(event);
     });
 
-    window.addEventListener('mouseup', (event) => {
+    window.addEventListener('mouseup', () => {
       this.mouse.pressed = false;
     });
 
