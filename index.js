@@ -29,6 +29,15 @@ class Particle {
     context.stroke();
   }
   update() {
+    if (this.effect.mouse.pressed) {
+      const dx = this.x - this.effect.mouse.x;
+      const dy = this.y - this.effect.mouse.y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < this.effect.mouse.radius) {
+        this.vx += dx / 500;
+        this.vy += dy / 500;
+      }
+    }
     this.x += this.vx;
     this.y += this.vy;
     if (this.x > this.effect.width - this.radius || this.x < this.radius) this.vx *= -1;
@@ -49,9 +58,37 @@ class Effect {
     this.particles = [];
     this.numberOfParticles = 200;
     this.createParticles();
+
+    this.mouse = {
+      x: 0,
+      y: 0,
+      pressed: false,
+      radius: 150,
+    }
+
     window.addEventListener('resize', (event) => { // use arrow function, not use regular function
       this.resize(event.target.window.innerWidth, event.target.window.innerHeight);
-    })
+    });
+
+    window.addEventListener('mousemove', (event) => {
+      if (this.mouse.pressed) {
+        this.assignMouseCordinate(event);
+      }
+    });
+
+    window.addEventListener('mousedown', (event) => {
+      this.mouse.pressed = true;
+      this.assignMouseCordinate(event);
+    });
+
+    window.addEventListener('mouseup', (event) => {
+      this.mouse.pressed = false;
+    });
+
+  }
+  assignMouseCordinate(event) {
+    this.mouse.x = event.x;
+    this.mouse.y = event.y;
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
