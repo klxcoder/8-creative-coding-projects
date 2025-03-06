@@ -102,12 +102,11 @@ const Connector = {
 };
 
 class Effect {
-  constructor(canvas, context, particleClass, plugins = []) {
+  constructor(canvas, context, plugins = []) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.context = context;
-    this.particleClass = particleClass;
     this.particles = [];
     this.plugins = plugins;
     this.numberOfParticles = 200;
@@ -154,7 +153,7 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new this.particleClass(this, i, this.plugins));
+      this.particles.push(new Particle(this, i, this.plugins));
     }
   }
   handleParticles(context) {
@@ -176,13 +175,13 @@ class Effect {
 
 class SunriseEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, Particle, [LineDrawer, Connector]);
+    super(canvas, context, [LineDrawer, Connector]);
   }
 }
 
 class BubbleEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, Particle, []);
+    super(canvas, context, []);
   }
 }
 
