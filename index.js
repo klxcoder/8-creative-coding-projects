@@ -30,22 +30,8 @@ class Particle {
 }
 
 class SunriseParticle extends Particle {
-  constructor({
-    effect,
-    index,
-    plugins = [],
-    dv,
-    radiusFrom,
-    radiusTo,
-  }) {
-    super({
-      effect,
-      index,
-      plugins,
-      dv,
-      radiusFrom,
-      radiusTo,
-    });
+  constructor(config) {
+    super(config);
     this.pushX = 0;
     this.pushY = 0;
     this.friction = 0.8;
@@ -83,22 +69,8 @@ class SunriseParticle extends Particle {
 }
 
 class BubbleParticle extends Particle {
-  constructor({
-    effect,
-    index,
-    plugins = [],
-    dv,
-    radiusFrom,
-    radiusTo,
-  }) {
-    super({
-      effect,
-      index,
-      plugins,
-      dv,
-      radiusFrom,
-      radiusTo,
-    });
+  constructor(config) {
+    super(config);
     this.minRadius = this.radius;
     this.maxRadius = this.radius * 5;
   }
@@ -134,22 +106,8 @@ class BubbleParticle extends Particle {
 }
 
 class StarParticle extends SunriseParticle {
-  constructor({
-    effect,
-    index,
-    plugins = [],
-    dv,
-    radiusFrom,
-    radiusTo,
-  }) {
-    super({
-      effect,
-      index,
-      plugins,
-      dv,
-      radiusFrom,
-      radiusTo,
-    });
+  constructor(config) {
+    super(config);
     this.friction = 0.6;
     this.width = this.height = 50 * (Math.random() * 0.8 + 0.2);
     this.frameX = getRandomInt(0, 2);
