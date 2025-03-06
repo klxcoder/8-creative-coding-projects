@@ -54,7 +54,6 @@ class Particle {
         const angle = Math.atan2(dy, dx);
         this.pushX += Math.cos(angle) * force;
         this.pushY += Math.sin(angle) * force;
-        console.log(this.pushX, this.pushY);
       }
     }
     this.x += (this.pushX *= this.friction) + this.vx;
@@ -115,6 +114,12 @@ class Effect {
 
     window.addEventListener('mouseup', (event) => {
       this.mouse.pressed = false;
+    });
+
+    document.addEventListener('contextmenu', (e) => {
+      console.log('Right mouse button clicked');
+      // Prevent default context menu from appearing
+      e.preventDefault();
     });
 
   }
