@@ -200,6 +200,7 @@ class Effect {
     dv,
     particleClass,
     radius,
+    numberOfParticles,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -210,7 +211,7 @@ class Effect {
     this.colorStops = colorStops;
     this.dv = dv;
     this.particleClass = particleClass;
-    this.numberOfParticles = 200;
+    this.numberOfParticles = numberOfParticles;
     this.initCtx();
     this.createParticles();
 
@@ -268,6 +269,7 @@ class SunriseEffect extends Effect {
       dv: 1,
       particleClass: SunriseParticle,
       radius: 150,
+      numberOfParticles: 200,
     });
   }
 }
@@ -282,6 +284,7 @@ class BubbleEffect extends Effect {
       dv: 0.2,
       particleClass: BubbleParticle,
       radius: 60,
+      numberOfParticles: 300,
     });
   }
 }
