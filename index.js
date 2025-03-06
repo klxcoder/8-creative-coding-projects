@@ -380,12 +380,12 @@ class StarEffect extends Effect {
       canvas,
       context,
       plugins: [Star],
-      backgroundColorStops: ['black', 'gray'],
-      particleColorStops: ['white', 'black'],
+      backgroundColorStops: ['black', 'black'],
+      particleColorStops: ['white', 'white'],
       dv: 0.2,
       particleClass: StarParticle,
       radius: 60,
-      numberOfParticles: 10,
+      numberOfParticles: 500,
     });
   }
 }
