@@ -35,7 +35,7 @@ class Particle {
     if (this.effect.mouse.pressed) {
       const dx = this.x - this.effect.mouse.x;
       const dy = this.y - this.effect.mouse.y;
-      const distance = Math.sqrt(dx * dx + dy * dy);
+      const distance = Math.hypot(dy, dx);
       const force = this.effect.mouse.radius / distance;
       if (distance < this.effect.mouse.radius) {
         const angle = Math.atan2(dy, dx);
