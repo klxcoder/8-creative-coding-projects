@@ -103,13 +103,14 @@ const Connector = {
 };
 
 class Effect {
-  constructor(canvas, context, plugins = []) {
+  constructor(canvas, context, plugins = [], colorStops = []) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.context = context;
     this.particles = [];
     this.plugins = plugins;
+    this.colorStops = colorStops;
     this.numberOfParticles = 200;
     this.initCtx();
     this.createParticles();
@@ -120,31 +121,10 @@ class Effect {
       pressed: false,
       radius: 150,
     }
-
-    window.addEventListener('resize', () => { // use arrow function, not use regular function
-      this.resize(window.innerWidth, window.innerHeight);
-    });
-
-    window.addEventListener('mousemove', (event) => {
-      if (this.mouse.pressed) {
-        this.assignMouseCordinate(event);
-      }
-    });
-
-    window.addEventListener('mousedown', (event) => {
-      this.mouse.pressed = true;
-      this.assignMouseCordinate(event);
-    });
-
-    window.addEventListener('mouseup', () => {
-      this.mouse.pressed = false;
-    });
-
   }
   initCtx() {
     const gradient = this.context.createLinearGradient(0, 0, 0, this.canvas.height);
-    gradient.addColorStop(0, 'white');
-    gradient.addColorStop(1, 'gold');
+    this.colorStops.forEach((colorStop, index) => gradient.addColorStop(index / (this.colorStops.length - 1), colorStop));
     this.context.fillStyle = gradient;
     this.context.strokeStyle = gradient;
   }
@@ -176,26 +156,45 @@ class Effect {
 
 class SunriseEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, [LineDrawer, Connector]);
+    super(canvas, context, [LineDrawer, Connector], ['white', 'gold']);
   }
 }
 
 class BubbleEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, []);
+    super(canvas, context, [], ['red', 'magenta', 'blue', 'green', 'yellow']);
   }
 }
 
 const effects = [
-  new BubbleEffect(canvas, ctx),
   new SunriseEffect(canvas, ctx),
+  new BubbleEffect(canvas, ctx),
 ];
 let effectIndex = 0;
 let effect = effects[effectIndex];
 
+const updateEvents = () => {
+  window.onresize = () => effect.resize(window.innerWidth, window.innerHeight);
+  window.onmousemove = (event) => {
+    if (effect.mouse.pressed) effect.assignMouseCordinate(event);
+  };
+  window.onmousedown = (event) => {
+    effect.mouse.pressed = true;
+    effect.assignMouseCordinate(event);
+  };
+  window.onmouseup = () => {
+    effect.mouse.pressed = false;
+  };
+  effect.initCtx();
+};
+// Initialize events
+updateEvents();
+
 document.addEventListener('contextmenu', (e) => {
   effectIndex = (effectIndex + 1) % effects.length;
   effect = effects[effectIndex];
+  // Update event listeners to use the new effect
+  updateEvents();
   // Prevent default context menu from appearing
   e.preventDefault();
 });
