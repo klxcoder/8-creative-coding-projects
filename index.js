@@ -461,6 +461,22 @@ window.addEventListener('load', () => {
   //
   function animate() {
     ctx.drawImage(effect.backgroundCanvas, 0, 0);
+    //
+    const text = "@KLXCODER"
+    ctx.font = "bold 40px sans-serif";
+    ctx.textAlign = "center"; // Center horizontally
+    ctx.textBaseline = "middle"; // Center vertically
+    ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+    //
+    const textWidth = ctx.measureText(text).width;
+    const textHeight = 40; // Approximate from font size
+    ctx.strokeRect(
+      canvas.width / 2 - textWidth / 2 - 6,
+      canvas.height / 2 - textHeight / 2 - 6,
+      textWidth + 10,
+      textHeight + 10
+    );
+    //
     effect.handleParticles(ctx);
     requestAnimationFrame(animate);
   }
