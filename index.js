@@ -142,6 +142,7 @@ class StarParticle extends Particle {
     this.pushX = 0;
     this.pushY = 0;
     this.friction = 0.8;
+    this.width = this.height = 50 * (Math.random() * 0.8 + 0.2);
   }
   update() {
     if (this.effect.mouse.pressed) {
@@ -242,7 +243,7 @@ const Star = {
     context.fillStyle = 'white';
     context.beginPath();
     context.arc(particle.x - particle.radius * 0.2, particle.y - particle.radius * 0.3, particle.radius * 0.6, 0, Math.PI * 2);
-    context.drawImage(this.image, particle.x, particle.y);
+    context.drawImage(this.image, particle.x, particle.y, particle.width, particle.height);
     context.fill();
     context.restore();
   }
