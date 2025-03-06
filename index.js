@@ -18,8 +18,7 @@ class Particle {
     this.pushY = 0;
     this.friction = 0.8;
   }
-  draw(context) {
-    // Draw line
+  drawLine(context) {
     if (this.index % 5 === 0) {
       context.save();
       context.globalAlpha = 0.2;
@@ -29,7 +28,8 @@ class Particle {
       context.stroke();
       context.restore();
     }
-    // Draw particle
+  }
+  drawParticle(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
@@ -126,9 +126,27 @@ class Effect {
     }
   }
   handleParticles(context) {
+  }
+  resize(width, height) {
+    // change canvas width or height will reset ctx, even ctx.save() won't work
+    this.width = this.canvas.width = width;
+    this.height = this.canvas.height = height;
+    // Have to re-define ctx styles after resizing canvas
+    this.initCtx();
+    // Reset particles
+    this.particles.forEach((particle) => particle.reset());
+  }
+}
+
+class SunriseEffect extends Effect {
+  constructor(canvas, context) {
+    super(canvas, context);
+  }
+  handleParticles(context) {
     this.connectParticles(context);
     this.particles.forEach((particle) => {
-      particle.draw(context);
+      particle.drawLine(context);
+      particle.drawParticle(context);
       particle.update();
     });
   }
@@ -152,21 +170,23 @@ class Effect {
       }
     }
   }
-  resize(width, height) {
-    // change canvas width or height will reset ctx, even ctx.save() won't work
-    this.width = this.canvas.width = width;
-    this.height = this.canvas.height = height;
-    // Have to re-define ctx styles after resizing canvas
-    initCtx(this.canvas, this.context);
-    // Reset particles
-    this.particles.forEach((particle) => particle.reset());
+}
+
+class BubbleEffect extends Effect {
+  constructor(canvas, context) {
+    super(canvas, context);
+  }
+  handleParticles(context) {
+    this.particles.forEach((particle) => {
+      particle.drawParticle(context);
+      particle.update();
+    });
   }
 }
 
-
 const effects = [
-  new Effect(canvas, ctx),
-  new Effect(canvas, ctx),
+  new BubbleEffect(canvas, ctx),
+  new SunriseEffect(canvas, ctx),
 ];
 let effectIndex = 0;
 let effect = effects[effectIndex];
