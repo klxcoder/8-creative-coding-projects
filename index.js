@@ -4,12 +4,15 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
-const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-gradient.addColorStop(0, 'white');
-gradient.addColorStop(0.5, 'magenta');
-gradient.addColorStop(1, 'blue');
-ctx.fillStyle = gradient;
-ctx.strokeStyle = 'white';
+function initCtx(canvas, ctx) {
+  const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, 'white');
+  gradient.addColorStop(0.5, 'magenta');
+  gradient.addColorStop(1, 'blue');
+  ctx.fillStyle = gradient;
+  ctx.strokeStyle = 'white';
+}
+initCtx(canvas, ctx);
 
 class Particle {
   constructor(effect) {
@@ -35,13 +38,17 @@ class Particle {
 }
 
 class Effect {
-  constructor(canvas) {
+  constructor(canvas, context) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
+    this.context = context;
     this.particles = [];
     this.numberOfParticles = 200;
     this.createParticles();
+    window.addEventListener('resize', (event) => { // use arrow function, not use regular function
+      this.resize(event.target.window.innerWidth, event.target.window.innerHeight);
+    })
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
@@ -75,10 +82,16 @@ class Effect {
       }
     }
   }
+  resize(width, height) {
+    // change canvas width or height will reset ctx, even ctx.save() won't work
+    this.width = this.canvas.width = width;
+    this.height = this.canvas.height = height;
+    // Have to re-define ctx styles after resizing canvas
+    initCtx(this.canvas, this.context);
+  }
 }
 
-const effect = new Effect(canvas);
-effect.handleParticles(ctx);
+const effect = new Effect(canvas, ctx);
 
 function animate() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
