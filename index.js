@@ -1,3 +1,5 @@
+const getRandomInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
 // setup
 const canvas = document.getElementById('canvas1');
 const ctx = canvas.getContext('2d');
@@ -17,7 +19,7 @@ initCtx(canvas, ctx);
 class Particle {
   constructor(effect) {
     this.effect = effect;
-    this.radius = Math.random() * 5 + 2;
+    this.radius = getRandomInt(4, 15);
     this.reset();
     this.vx = Math.random() * 1 - 0.5;
     this.vy = Math.random() * 1 - 0.5;
@@ -63,8 +65,8 @@ class Particle {
     }
   }
   reset() {
-    this.x = this.radius + Math.random() * (this.effect.width - this.radius * 2);
-    this.y = this.radius + Math.random() * (this.effect.height - this.radius * 2);
+    this.x = this.radius + getRandomInt(0, this.effect.width - this.radius * 2);
+    this.y = this.radius + getRandomInt(0, this.effect.height - this.radius * 2);
   }
 }
 
