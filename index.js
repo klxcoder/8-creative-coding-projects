@@ -7,10 +7,12 @@ class Particle {
     index,
     plugins = [],
     dv,
+    radiusFrom,
+    radiusTo,
   }) {
     this.effect = effect;
     this.index = index;
-    this.radius = getRandomInt(4, 15);
+    this.radius = getRandomInt(radiusFrom, radiusTo);
     this.reset();
     this.vx = Math.random() * 2 * dv - dv;
     this.vy = Math.random() * 2 * dv - dv;
@@ -33,12 +35,16 @@ class SunriseParticle extends Particle {
     index,
     plugins = [],
     dv,
+    radiusFrom,
+    radiusTo,
   }) {
     super({
       effect,
       index,
       plugins,
       dv,
+      radiusFrom,
+      radiusTo,
     });
     this.pushX = 0;
     this.pushY = 0;
@@ -82,12 +88,16 @@ class BubbleParticle extends Particle {
     index,
     plugins = [],
     dv,
+    radiusFrom,
+    radiusTo,
   }) {
     super({
       effect,
       index,
       plugins,
       dv,
+      radiusFrom,
+      radiusTo,
     });
     this.minRadius = this.radius;
     this.maxRadius = this.radius * 5;
@@ -129,12 +139,16 @@ class StarParticle extends SunriseParticle {
     index,
     plugins = [],
     dv,
+    radiusFrom,
+    radiusTo,
   }) {
     super({
       effect,
       index,
       plugins,
       dv,
+      radiusFrom,
+      radiusTo,
     });
     this.friction = 0.6;
     this.width = this.height = 50 * (Math.random() * 0.8 + 0.2);
@@ -234,6 +248,8 @@ class Effect {
     particleClass,
     radius,
     numberOfParticles,
+    radiusFrom,
+    radiusTo,
   }) {
     this.canvas = canvas;
     this.width = this.canvas.width;
@@ -246,6 +262,8 @@ class Effect {
     this.dv = dv;
     this.particleClass = particleClass;
     this.numberOfParticles = numberOfParticles;
+    this.radiusFrom = radiusFrom;
+    this.radiusTo = radiusTo;
     this.backgroundCanvas = this.getBackgroundCanvas();
     this.initCtx();
     this.createParticles();
@@ -292,6 +310,8 @@ class Effect {
         index: i,
         plugins: this.plugins,
         dv: this.dv,
+        radiusFrom: this.radiusFrom,
+        radiusTo: this.radiusTo,
       }));
     }
   }
@@ -324,6 +344,8 @@ class SunriseEffect extends Effect {
       particleClass: SunriseParticle,
       radius: 150,
       numberOfParticles: 200,
+      radiusFrom: 4,
+      radiusTo: 15,
     });
   }
 }
@@ -340,6 +362,8 @@ class BubbleEffect extends Effect {
       particleClass: BubbleParticle,
       radius: 60,
       numberOfParticles: 300,
+      radiusFrom: 4,
+      radiusTo: 15,
     });
   }
 }
@@ -356,6 +380,26 @@ class StarEffect extends Effect {
       particleClass: StarParticle,
       radius: 60,
       numberOfParticles: 500,
+      radiusFrom: 4,
+      radiusTo: 15,
+    });
+  }
+}
+
+class LiquidEffect extends Effect {
+  constructor(canvas, context) {
+    super({
+      canvas,
+      context,
+      plugins: [CircleFill, LineDrawer, Connector],
+      backgroundColorStops: ['black', 'black'],
+      particleColorStops: ['yellow', 'gold'],
+      dv: 1,
+      particleClass: SunriseParticle,
+      radius: 150,
+      numberOfParticles: 200,
+      radiusFrom: 20,
+      radiusTo: 40,
     });
   }
 }
@@ -382,9 +426,10 @@ window.addEventListener('load', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const effects = [
-    new StarEffect(canvas, ctx),
+    new LiquidEffect(canvas, ctx),
     new SunriseEffect(canvas, ctx),
     new BubbleEffect(canvas, ctx),
+    new StarEffect(canvas, ctx),
   ];
   let effectIndex = 0;
   let effect = effects[effectIndex];
