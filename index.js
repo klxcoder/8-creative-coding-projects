@@ -17,9 +17,6 @@ class Particle {
     this.plugins = plugins;
   }
   draw(context) {
-    context.beginPath();
-    context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-    context.fill();
     this.plugins.forEach(plugin => plugin.draw(this, context));
   }
   update() {
@@ -177,6 +174,7 @@ class StarParticle extends Particle {
 }
 
 // Plugins
+
 const LineDrawer = {
   draw(particle, context) {
     if (particle.index % 5 === 0) {
@@ -221,6 +219,14 @@ const Border = {
     context.strokeStyle = 'black';
     context.stroke();
     context.restore();
+  }
+}
+
+const CircleFill = {
+  draw(particle, context) {
+    context.beginPath();
+    context.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
+    context.fill();
   }
 }
 
@@ -341,7 +347,7 @@ class SunriseEffect extends Effect {
     super({
       canvas,
       context,
-      plugins: [LineDrawer, Connector],
+      plugins: [CircleFill, LineDrawer, Connector],
       backgroundColorStops: ['darkblue', 'lightblue'],
       particleColorStops: ['white', 'gold'],
       dv: 1,
@@ -357,7 +363,7 @@ class BubbleEffect extends Effect {
     super({
       canvas,
       context,
-      plugins: [Border, Reflection],
+      plugins: [CircleFill, Border, Reflection],
       backgroundColorStops: ['lightblue', 'darkblue'],
       particleColorStops: ['red', 'magenta'],
       dv: 0.2,
@@ -373,7 +379,7 @@ class StarEffect extends Effect {
     super({
       canvas,
       context,
-      plugins: [Border, Star],
+      plugins: [Star],
       backgroundColorStops: ['black', 'gray'],
       particleColorStops: ['white', 'black'],
       dv: 0.2,
