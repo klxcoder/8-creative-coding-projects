@@ -6,8 +6,9 @@ const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 
+// Particle Class with Plugin Support
 class Particle {
-  constructor(effect, index) {
+  constructor(effect, index, plugins = []) {
     this.effect = effect;
     this.index = index;
     this.radius = getRandomInt(4, 15);
@@ -17,15 +18,14 @@ class Particle {
     this.pushX = 0;
     this.pushY = 0;
     this.friction = 0.8;
+    this.plugins = plugins;
   }
-  drawParticle(context) {
+  draw(context) {
     context.beginPath();
     context.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     context.fill();
     context.stroke();
-  }
-  draw(context) {
-    this.drawParticle(context);
+    this.plugins.forEach(plugin => plugin.draw?.(this, context));
   }
   update() {
     if (this.effect.mouse.pressed) {
@@ -63,31 +63,53 @@ class Particle {
   }
 }
 
-class SunriseParticle extends Particle {
-  constructor(effect, index) {
-    super(effect, index);
-  }
-  drawLine(context) {
-    if (this.index % 5 === 0) {
+// Plugins
+const LineDrawer = {
+  draw(particle, context) {
+    if (particle.index % 5 === 0) {
       context.save();
       context.globalAlpha = 0.2;
       context.beginPath();
-      context.moveTo(this.x, this.y);
-      context.lineTo(this.effect.mouse.x, this.effect.mouse.y);
+      context.moveTo(particle.x, particle.y);
+      context.lineTo(particle.effect.mouse.x, particle.effect.mouse.y);
       context.stroke();
       context.restore();
     }
   }
 }
 
+const Connector = {
+  draw(particle, context) {
+    const MAX_DISTANCE_SQUARE = 100 * 100;
+    particle.effect.particles.forEach(other => {
+      if (particle !== other) {
+        const dx = particle.x - other.x;
+        const dy = particle.y - other.y;
+        const distance_square = dx * dx + dy * dy;
+        if (distance_square < MAX_DISTANCE_SQUARE) {
+          context.save();
+          const opacity = 1 - distance_square / MAX_DISTANCE_SQUARE;
+          context.globalAlpha = opacity;
+          context.beginPath();
+          context.moveTo(particle.x, particle.y);
+          context.lineTo(other.x, other.y);
+          context.stroke();
+          context.restore();
+        }
+      }
+    });
+  }
+};
+
 class Effect {
-  constructor(canvas, context, particleClass) {
+  constructor(canvas, context, particleClass, plugins = []) {
     this.canvas = canvas;
     this.width = this.canvas.width;
     this.height = this.canvas.height;
     this.context = context;
     this.particleClass = particleClass;
     this.particles = [];
+    this.plugins = plugins;
     this.numberOfParticles = 200;
     this.initCtx();
     this.createParticles();
@@ -132,10 +154,14 @@ class Effect {
   }
   createParticles() {
     for (let i = 0; i < this.numberOfParticles; i++) {
-      this.particles.push(new this.particleClass(this, i));
+      this.particles.push(new this.particleClass(this, i, this.plugins));
     }
   }
   handleParticles(context) {
+    this.particles.forEach((particle) => {
+      particle.draw(context);
+      particle.update();
+    });
   }
   resize(width, height) {
     // change canvas width or height will reset ctx, even ctx.save() won't work
@@ -150,47 +176,13 @@ class Effect {
 
 class SunriseEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, SunriseParticle);
-  }
-  handleParticles(context) {
-    this.connectParticles(context);
-    this.particles.forEach((particle) => {
-      particle.drawLine(context);
-      particle.drawParticle(context);
-      particle.update();
-    });
-  }
-  connectParticles(context) {
-    const MAX_DISTANCE_SQUARE = 100 * 100; // 100px
-    for (let i = 0; i < this.particles.length; i++) {
-      for (let j = i + 1; j < this.particles.length; j++) {
-        const dx = this.particles[i].x - this.particles[j].x;
-        const dy = this.particles[i].y - this.particles[j].y;
-        const distance_square = dx * dx + dy * dy;
-        if (distance_square < MAX_DISTANCE_SQUARE) {
-          context.save();
-          const opacity = 1 - distance_square / MAX_DISTANCE_SQUARE;
-          context.globalAlpha = opacity;
-          context.beginPath();
-          context.moveTo(this.particles[i].x, this.particles[i].y);
-          context.lineTo(this.particles[j].x, this.particles[j].y);
-          context.stroke();
-          context.restore();
-        }
-      }
-    }
+    super(canvas, context, Particle, [LineDrawer, Connector]);
   }
 }
 
 class BubbleEffect extends Effect {
   constructor(canvas, context) {
-    super(canvas, context, Particle);
-  }
-  handleParticles(context) {
-    this.particles.forEach((particle) => {
-      particle.drawParticle(context);
-      particle.update();
-    });
+    super(canvas, context, Particle, []);
   }
 }
 
