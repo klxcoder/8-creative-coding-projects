@@ -20,9 +20,6 @@ class Particle {
     this.reset();
     this.vx = Math.random() * 2 * dv - dv;
     this.vy = Math.random() * 2 * dv - dv;
-    this.pushX = 0;
-    this.pushY = 0;
-    this.friction = 0.8;
     this.plugins = plugins;
   }
   draw(context) {
@@ -52,6 +49,9 @@ class SunriseParticle extends Particle {
       plugins,
       dv,
     });
+    this.pushX = 0;
+    this.pushY = 0;
+    this.friction = 0.8;
   }
   update() {
     if (this.effect.mouse.pressed) {
@@ -98,6 +98,32 @@ class BubbleParticle extends Particle {
       plugins,
       dv,
     });
+  }
+  update() {
+    if (this.effect.mouse.pressed) {
+      const dx = this.x - this.effect.mouse.x;
+      const dy = this.y - this.effect.mouse.y;
+      const distance = Math.hypot(dy, dx);
+      if (distance < this.effect.mouse.radius) {
+        this.radius += 2;
+      }
+    }
+    this.x += this.vx;
+    this.y += this.vy;
+    if (this.x < this.radius) {
+      this.x = this.radius;
+      this.vx *= -1;
+    } else if (this.x > this.effect.width - this.radius) {
+      this.x = this.effect.width - this.radius;
+      this.vx *= -1;
+    }
+    if (this.y < this.radius) {
+      this.y = this.radius;
+      this.vy *= -1;
+    } else if (this.y > this.effect.height - this.radius) {
+      this.y = this.effect.height - this.radius;
+      this.vy *= -1;
+    }
   }
 }
 
