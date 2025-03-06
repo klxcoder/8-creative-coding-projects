@@ -126,6 +126,55 @@ class BubbleParticle extends Particle {
   }
 }
 
+class StarParticle extends Particle {
+  constructor({
+    effect,
+    index,
+    plugins = [],
+    dv,
+  }) {
+    super({
+      effect,
+      index,
+      plugins,
+      dv,
+    });
+    this.pushX = 0;
+    this.pushY = 0;
+    this.friction = 0.8;
+  }
+  update() {
+    if (this.effect.mouse.pressed) {
+      const dx = this.x - this.effect.mouse.x;
+      const dy = this.y - this.effect.mouse.y;
+      const distance = Math.hypot(dy, dx);
+      const force = this.effect.mouse.radius / distance;
+      if (distance < this.effect.mouse.radius) {
+        const angle = Math.atan2(dy, dx);
+        this.pushX += Math.cos(angle) * force;
+        this.pushY += Math.sin(angle) * force;
+      }
+    }
+    this.x += (this.pushX *= this.friction) + this.vx;
+    this.y += (this.pushY *= this.friction) + this.vy;
+    if (this.x < this.radius) {
+      this.x = this.radius;
+      this.vx *= -1;
+    } else if (this.x > this.effect.width - this.radius) {
+      this.x = this.effect.width - this.radius;
+      this.vx *= -1;
+    }
+
+    if (this.y < this.radius) {
+      this.y = this.radius;
+      this.vy *= -1;
+    } else if (this.y > this.effect.height - this.radius) {
+      this.y = this.effect.height - this.radius;
+      this.vy *= -1;
+    }
+  }
+}
+
 // Plugins
 const LineDrawer = {
   draw(particle, context) {
@@ -180,6 +229,20 @@ const Reflection = {
     context.fillStyle = 'white';
     context.beginPath();
     context.arc(particle.x - particle.radius * 0.2, particle.y - particle.radius * 0.3, particle.radius * 0.6, 0, Math.PI * 2);
+    context.fill();
+    context.restore();
+  }
+}
+
+const Star = {
+  image: document.getElementById('stars_sprite'),
+  draw(particle, context) {
+    console.log('Here image = ', this.image);
+    context.save();
+    context.fillStyle = 'white';
+    context.beginPath();
+    context.arc(particle.x - particle.radius * 0.2, particle.y - particle.radius * 0.3, particle.radius * 0.6, 0, Math.PI * 2);
+    context.drawImage(this.image, particle.x, particle.y);
     context.fill();
     context.restore();
   }
@@ -283,6 +346,21 @@ class BubbleEffect extends Effect {
   }
 }
 
+class StarEffect extends Effect {
+  constructor(canvas, context) {
+    super({
+      canvas,
+      context,
+      plugins: [Border, Star],
+      colorStops: ['white', 'black'],
+      dv: 0.2,
+      particleClass: StarParticle,
+      radius: 60,
+      numberOfParticles: 10,
+    });
+  }
+}
+
 const updateEvents = (effect) => {
   window.onresize = () => effect.resize(window.innerWidth, window.innerHeight);
   window.onmousemove = (event) => {
@@ -305,6 +383,7 @@ window.addEventListener('load', () => {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   const effects = [
+    new StarEffect(canvas, ctx),
     new SunriseEffect(canvas, ctx),
     new BubbleEffect(canvas, ctx),
   ];
