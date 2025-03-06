@@ -351,7 +351,7 @@ class LiquidEffect extends Effect {
       context,
       plugins: [CircleFill, LineDrawer, Connector],
       backgroundColorStops: ['black', 'black'],
-      particleColorStops: ['yellow', 'gold'],
+      particleColorStops: ['white', 'white'],
       dv: 1,
       particleClass: SunriseParticle,
       radius: 150,
