@@ -268,6 +268,7 @@ class Effect {
     this.dv = dv;
     this.particleClass = particleClass;
     this.numberOfParticles = numberOfParticles;
+    this.backgroundCanvas = this.getBackgroundCanvas();
     this.initCtx();
     this.createParticles();
 
@@ -278,11 +279,30 @@ class Effect {
       radius: radius,
     }
   }
+  getBackgroundCanvas() {
+    //
+    const backgroundCanvas = document.createElement('canvas');
+    //
+    backgroundCanvas.width = this.canvas.width;
+    backgroundCanvas.height = this.canvas.height;
+    //
+    const backgroundCtx = backgroundCanvas.getContext('2d');
+
+    const gradient = backgroundCtx.createLinearGradient(0, 0, 0, this.canvas.height);
+    gradient.addColorStop(0, 'darkblue');
+    gradient.addColorStop(1, 'lightblue');
+    backgroundCtx.fillStyle = gradient;
+    //
+    backgroundCtx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    //
+    return backgroundCanvas;
+  }
   initCtx() {
     const gradient = this.context.createLinearGradient(0, 0, 0, this.canvas.height);
     this.colorStops.forEach((colorStop, index) => gradient.addColorStop(index / (this.colorStops.length - 1), colorStop));
     this.context.fillStyle = gradient;
     this.context.strokeStyle = gradient;
+    this.backgroundCanvas = this.getBackgroundCanvas();
   }
   assignMouseCordinate(event) {
     this.mouse.x = event.x;
@@ -401,7 +421,7 @@ window.addEventListener('load', () => {
   updateEvents(effect);
   //
   function animate() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(effect.backgroundCanvas, 0, 0);
     effect.handleParticles(ctx);
     requestAnimationFrame(animate);
   }
